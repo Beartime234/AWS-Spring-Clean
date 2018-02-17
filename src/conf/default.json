@@ -3,5 +3,9 @@
           [
             "us-east-1",
             "us-east-2"
-          ]
+          ],
+  "results": {
+    "dir": "results",
+    "file_name": "cleaning_results.json"
+  }
 }
