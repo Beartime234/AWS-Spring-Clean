@@ -6,6 +6,6 @@
           ],
   "results": {
     "dir": "results",
-    "file_name": "cleaning_results.json"
+    "filename": "cleaning_results.json"
   }
 }

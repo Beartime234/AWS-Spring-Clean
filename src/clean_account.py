@@ -2,15 +2,15 @@
 """AWS Clean
 
 Usage:
-  clean_account.py clean (--profile PROFILE_NAME) [--conf FILE]
+  clean_account.py clean (--profile PROFILE_NAME) [--configuration FILE]
   clean_account.py (-h | --help)
   clean_account.py (-v | --version)
 
 Options:
-  --profile         Profile name used with appropriate permissions into this AWS.
-  --conf=FILE       Location and name of configuration file. [default: src/conf/default.json]
-  -h --help         Show this screen.
-  -v --version      Show version.
+  --profile             Profile name used with appropriate permissions into this AWS.
+  --configuration=FILE  Location and name of configuration file. [default: src/configuration/default.json]
+  -h --help             Show this screen.
+  -v --version          Show version.
 
 """
 
@@ -22,18 +22,22 @@ import json
 
 #Module Imports
 import settings
-from cleaners.clean_instances import clean_instances
-from cleaners.clean_buckets import clean_buckets
+
+#Cleaner Imports
+from cleaners.clean_ec2_instances import clean_ec2_instances
+from cleaners.clean_lambda_functions import clean_lambda_functions
+from cleaners.clean_s3_buckets import clean_buckets
+from cleaners.clean_rds_instances import clean_rds_instances
 
 # Global Variables
 account_session = None
 
 
 def main():
-    print("Cleaning Global Resources.")
+    print("Cleaning Global resources.")
     settings.set_session()  # Set a blank session for global resources
     clean_results = {"global": clean_account_globally()}
-    print("Finished cleaning global resources.")
+    print("Finished Cleaning Global Resources.")
     regions = settings.get_regions() # Get regions from config
     for region in regions:
         print("Cleaning in {0} region.".format(region))
@@ -49,7 +53,11 @@ def clean_account_regionally():
     Returns:
         A dictionary of the results of the destruction for global resources
     """
-    results = {"instances": clean_instances()}
+    results = {
+        "ec2_instances": clean_ec2_instances(),
+        "rds_instances": clean_rds_instances(),
+        "lambda_functions": clean_lambda_functions()
+    }
     return results
 
 
@@ -59,7 +67,9 @@ def clean_account_globally():
     Returns:
         A dictionary of the results of the destruction for region specific resources
     """
-    results = {"s3buckets": clean_buckets()}
+    results = {
+        "s3buckets": clean_buckets()
+    }
     return results
 
 
@@ -88,8 +98,8 @@ def validate_arguments():
     """
     #print(arguments)
     schema = Schema({
-        "--conf": Use(open, error='Configuration file ({0})'
-                                  ' could not be opened.'.format(settings.arguments["--conf"]))
+        "--configuration": Use(open, error='Configuration file ({0})'
+                                  ' could not be opened.'.format(settings.arguments["--configuration"]))
     }, ignore_extra_keys=True)
     try:
         schema.validate(settings.arguments)

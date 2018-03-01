@@ -2,17 +2,17 @@ import boto3
 import botocore
 
 
-def clean_instances() -> list:
+def clean_ec2_instances() -> list:
     """Main ordering for cleaning instances.
 
     Returns:
         A list of all terminated instances
     """
-    print("Cleaning Instances")
+    print("Cleaning EC2 Instances")
     ec2_client = boto3.client("ec2")
     instances = get_instances(ec2_client)
-    terminated_instances = delete_instances(ec2_client, instances)
-    print("Terminated {0} Instances".format(len(terminated_instances)))
+    terminated_instances = delete_instances(instances)
+    print("Terminated {0} EC2 Instance/s".format(len(terminated_instances)))
     return terminated_instances
 
 
@@ -33,11 +33,10 @@ def get_instances(ec2_client) -> list:
     return instance_list
 
 
-def delete_instances(ec2_client, instances):
+def delete_instances(instances):
     """Deletes all instances in the instances parameter.
 
     Args:
-        ec2_client: A EC2 boto3 client.
         instances: A list of instances you want deleted.
 
     Returns:

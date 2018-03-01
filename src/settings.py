@@ -38,7 +38,7 @@ def get_from_config() -> dict:
         A dictionary for the configuration file
 
     """
-    with open(arguments["--conf"], 'r') as conf_file:
+    with open(arguments["--configuration"], 'r') as conf_file:
         return json.loads(conf_file.read())
 
 def get_regions() -> list:
@@ -66,4 +66,4 @@ def get_results_filename() -> str:
         A string that is the results filename
 
     """
-    return "{0}/{1}".format(get_results_dir(), get_from_config()["results"]["file_name"])
+    return "{0}/{1}".format(get_results_dir(), get_from_config()["results"]["filename"])
