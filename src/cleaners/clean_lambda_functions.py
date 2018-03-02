@@ -33,7 +33,7 @@ def get_functions(lambda_client) -> list:
     return function_list
 
 
-def delete_functions(lambda_client, function_list):
+def delete_functions(lambda_client, function_list) -> list:
     """Deletes all instances in the instances parameter.
 
     Args:

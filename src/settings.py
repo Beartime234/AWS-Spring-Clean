@@ -7,10 +7,30 @@ import sys
 import pathlib
 import os
 
+
+# Changeable Settings
+WHITELIST = {
+    "global": {
+        "s3_buckets": []
+    },
+    "us-east-1": {
+        "ec2_instances": [],
+        "rds_instances": [],
+        "lambda_functions": [],
+    }
+}
+REGIONS = [
+    "us-east-1",
+    "us-east-2"
+]
+RESULTS_DIR = "results"
+RESULTS_FILENAME = "aws-clean"
+
 # Project Global Variables
 ACCOUNT_SESSION = None
 ARGUMENTS = {}
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def save_results(results):
     """Write the results to a file
@@ -49,24 +69,6 @@ def set_session(region=None):
         sys.exit(1)
     return
 
-def get_from_config() -> dict:
-    """Returns a the config file as a dictionary
-
-    Returns:
-        A dictionary for the configuration file
-
-    """
-    with open(ARGUMENTS["--configuration"], 'r') as conf_file:
-        return json.loads(conf_file.read())
-
-def get_regions() -> list:
-    """Returns the regions to delete resources from the configuration file
-
-    Returns:
-        A list of regions.
-
-    """
-    return get_from_config()["regions"]
 
 def get_results_dir() -> str:
     """Returns the configuration directory
@@ -75,7 +77,7 @@ def get_results_dir() -> str:
         A string that is the results directory
 
     """
-    return "{0}/{1}".format(ROOT_DIR, get_from_config()["results"]["dir"])
+    return "{0}/{1}".format(ROOT_DIR, RESULTS_DIR)
 
 def get_results_filename() -> str:
     """Returns the configuration filename
@@ -84,4 +86,19 @@ def get_results_filename() -> str:
         A string that is the results filename
 
     """
-    return "{0}/{1}".format(get_results_dir(), get_from_config()["results"]["filename"])
+    return "{0}/{1}.json".format(get_results_dir(), RESULTS_FILENAME)
+
+
+def check_in_whitelist(resource_id, resource_type) -> bool:
+    """Checks if the resource id is in the corresponding resources whitelist for the region
+
+    Args:
+        resource_id (str): The resource id which will reside in the whitelist
+        resource_type (str): The resource type e.g. s3_bucket or ec2_instance which will be in the whitelist
+
+    Returns:
+        bool True if in whitelist false if not
+
+    """
+    region = boto3._get_default_session().region_name
+    return True if resource_id in WHITELIST[region][resource_type] else False

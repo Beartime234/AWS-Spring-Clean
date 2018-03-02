@@ -29,13 +29,12 @@ from cleaners.clean_s3_buckets import clean_buckets
 from cleaners.clean_rds_instances import clean_rds_instances
 
 
-
 def main():
     print("Cleaning Global resources.")
     settings.set_session()  # Set a blank session for global resources
     clean_results = {"global": clean_account_globally()}
     print("Finished Cleaning Global Resources.")
-    regions = settings.get_regions() # Get regions from config
+    regions = settings.REGIONS # Get regions from config
     for region in regions:
         print("Cleaning in {0} region.".format(region))
         settings.set_session(region)  # Set current region
@@ -70,9 +69,6 @@ def clean_account_globally():
     return results
 
 
-
-
-
 def validate_arguments():
     """Uses the Schema package to validate arguments
 
@@ -82,8 +78,6 @@ def validate_arguments():
         None. Will raise an exception Schema error and show validation error.
     """
     schema = Schema({
-        "--configuration": Use(open, error='Configuration file ({0})'
-                                  ' could not be opened.'.format(settings.ARGUMENTS["--configuration"]))
     }, ignore_extra_keys=True)
     try:
         schema.validate(settings.ARGUMENTS)

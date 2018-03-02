@@ -1,5 +1,5 @@
 import boto3
-import botocore
+import settings
 
 
 def clean_ec2_instances() -> list:
@@ -34,7 +34,7 @@ def get_instances(ec2_client) -> list:
     return instance_list
 
 
-def delete_instances(instances):
+def delete_instances(instances) -> list:
     """Deletes all instances in the instances parameter.
 
     Args:
@@ -46,6 +46,8 @@ def delete_instances(instances):
     terminated_instances = []
     for instance in instances:
         instance_id = instance["InstanceId"]
+        if settings.check_in_whitelist(instance_id, "ec2_instances"):
+            continue
         ec2 = boto3.resource('ec2')
         instance = ec2.Instance(instance_id)
         instance.terminate()  # Terminate the instance

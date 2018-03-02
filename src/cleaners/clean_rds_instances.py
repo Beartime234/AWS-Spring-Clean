@@ -33,7 +33,7 @@ def get_rds(rds_client) -> list:
     return rds_instance_list
 
 
-def delete_rds(rds_client, rds_instances):
+def delete_rds(rds_client, rds_instances) -> list:
     """Deletes all instances in the instances parameter.
 
     Args:
@@ -50,3 +50,4 @@ def delete_rds(rds_client, rds_instances):
             SkipFinalSnapshot=True
         )
         terminated_instances.append(instance["DBInstanceIdentifier"])
+    return terminated_instances
