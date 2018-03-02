@@ -1,5 +1,9 @@
+# clean_s3_buckets.py
+
+# Package Imports
 import boto3
 
+# Module Imports
 import helpers
 
 

@@ -1,5 +1,4 @@
-#settings.py
-
+# settings.py
 
 # Changeable Settings
 WHITELIST = {
@@ -25,4 +24,3 @@ REGIONS = [
 ]
 RESULTS_DIR = "results"
 RESULTS_FILENAME = "aws-clean"
-

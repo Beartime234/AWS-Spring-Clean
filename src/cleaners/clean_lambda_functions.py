@@ -1,5 +1,9 @@
+# clean_lambda_functions.py
+
+# Package Imports
 import boto3
 
+# Module Imports
 import helpers
 
 
