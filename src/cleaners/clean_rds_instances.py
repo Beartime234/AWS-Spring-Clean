@@ -25,7 +25,11 @@ def get_rds(rds_client) -> list:
     Returns:
         A list of all InstanceIds in the account.
     """
-    rds_instance_list = rds_client.describe_db_instances()["DBInstances"]
+    rds_instance_list = []
+    paginator = rds_client.get_paginator("describe_db_instances")
+    pages = paginator.paginate()
+    for page in pages:
+        rds_instance_list = rds_instance_list + page["DBInstances"]
     return rds_instance_list
 
 
@@ -46,4 +50,3 @@ def delete_rds(rds_client, rds_instances):
             SkipFinalSnapshot=True
         )
         terminated_instances.append(instance["DBInstanceIdentifier"])
-    return terminated_instances

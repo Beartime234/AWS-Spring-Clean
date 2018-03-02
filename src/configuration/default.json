@@ -6,6 +6,6 @@
           ],
   "results": {
     "dir": "results",
-    "filename": "cleaning_results.json"
+    "filename": "aws-clean.json"
   }
 }

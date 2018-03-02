@@ -25,7 +25,11 @@ def get_functions(lambda_client) -> list:
     Returns:
         A list of all lambda functions in the account.
     """
-    function_list = lambda_client.list_functions()["Functions"]
+    function_list = []
+    paginator = lambda_client.get_paginator("list_functions")
+    pages = paginator.paginate()
+    for page in pages:
+        function_list = function_list + page["Functions"]
     return function_list
 
 

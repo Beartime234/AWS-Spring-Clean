@@ -26,10 +26,11 @@ def get_instances(ec2_client) -> list:
         A list of all InstanceIds in the account.
     """
     instance_list = []
-    response = ec2_client.describe_instances()
-    for reservation in response["Reservations"]:
-        for instances in reservation["Instances"]:
-            instance_list.append(instances["InstanceId"])
+    paginator = ec2_client.get_paginator("describe_instances")
+    pages = paginator.paginate()
+    for page in pages:
+        for reservation in page["Reservations"]:
+            instance_list = instance_list + reservation["Instances"]
     return instance_list
 
 
@@ -43,7 +44,8 @@ def delete_instances(instances):
         A count of deleted instances
     """
     terminated_instances = []
-    for instance_id in instances:
+    for instance in instances:
+        instance_id = instance["InstanceId"]
         ec2 = boto3.resource('ec2')
         instance = ec2.Instance(instance_id)
         instance.terminate()  # Terminate the instance

@@ -2,13 +2,14 @@
 """AWS Clean
 
 Usage:
-  clean_account.py clean (--profile PROFILE_NAME) [--configuration FILE]
+  clean_account.py clean (--profile PROFILE_NAME) [--configuration FILE] [-s --save]
   clean_account.py (-h | --help)
   clean_account.py (-v | --version)
 
 Options:
   --profile             Profile name used with appropriate permissions into this AWS.
   --configuration=FILE  Location and name of configuration file. [default: src/configuration/default.json]
+  -s --save             Saves the results to a file.
   -h --help             Show this screen.
   -v --version          Show version.
 
@@ -17,8 +18,6 @@ Options:
 #Package Imports
 from docopt import docopt
 from schema import Schema, Use, SchemaError
-import pathlib
-import json
 
 #Module Imports
 import settings
@@ -29,8 +28,6 @@ from cleaners.clean_lambda_functions import clean_lambda_functions
 from cleaners.clean_s3_buckets import clean_buckets
 from cleaners.clean_rds_instances import clean_rds_instances
 
-# Global Variables
-account_session = None
 
 
 def main():
@@ -44,7 +41,7 @@ def main():
         settings.set_session(region)  # Set current region
         clean_results[region] = clean_account_regionally()  # Clean current regions resources
         print("Finished cleaning in {0} region.".format(region))
-    write_results(clean_results) # TODO make this an argument to save
+    settings.save_results(clean_results)
 
 
 def clean_account_regionally():
@@ -73,19 +70,7 @@ def clean_account_globally():
     return results
 
 
-def write_results(results):
-    """Write the results to a file
 
-    Args:
-        results (dict): The dictionary of results to write to a file
-
-    Returns:
-        None
-    """
-    pathlib.Path(settings.get_results_dir()).mkdir(parents=True, exist_ok=True)
-    with open(settings.get_results_filename(), "w") as results_file:
-        results_file.write(json.dumps(results, sort_keys=True, indent=4))
-    return
 
 
 def validate_arguments():
@@ -96,13 +81,12 @@ def validate_arguments():
     Returns:
         None. Will raise an exception Schema error and show validation error.
     """
-    #print(arguments)
     schema = Schema({
         "--configuration": Use(open, error='Configuration file ({0})'
-                                  ' could not be opened.'.format(settings.arguments["--configuration"]))
+                                  ' could not be opened.'.format(settings.ARGUMENTS["--configuration"]))
     }, ignore_extra_keys=True)
     try:
-        schema.validate(settings.arguments)
+        schema.validate(settings.ARGUMENTS)
     except SchemaError as e:
         print(e)
         exit(1)
@@ -110,6 +94,6 @@ def validate_arguments():
 
 
 if __name__ == '__main__':
-    settings.arguments = docopt(__doc__, version='AWS Clean Unreleased')
+    settings.ARGUMENTS = docopt(__doc__, version='AWS Clean Unreleased')
     validate_arguments()
     main()
