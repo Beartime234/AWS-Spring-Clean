@@ -30,16 +30,16 @@ from cleaners.clean_rds_instances import clean_rds_instances
 
 
 def main():
-    print("Cleaning Global resources.")
+    print("Cleaning Global.")
     settings.set_session()  # Set a blank session for global resources
     clean_results = {"global": clean_account_globally()}
-    print("Finished Cleaning Global Resources.")
+    print("Finished Cleaning Global.")
     regions = settings.REGIONS  # Get regions from config
     for region in regions:
-        print("Cleaning In {0} Region.".format(region))
+        print("Cleaning In {0}.".format(region))
         settings.set_session(region)  # Set current region
         clean_results[region] = clean_account_regionally()  # Clean current regions resources
-        print("Finished Cleaning {0} Resources.".format(region))
+        print("Finished Cleaning In {0}.".format(region))
     settings.save_results(clean_results)
 
 
