@@ -1,5 +1,6 @@
 import boto3
-import settings
+
+import helpers
 
 
 def clean_rds_instances() -> list:
@@ -46,7 +47,7 @@ def delete_rds(rds_client, rds_instances) -> list:
     terminated_instances = []
     for instance in rds_instances:
         rds_indentifier = instance["DBInstanceIdentifier"]
-        if settings.check_in_whitelist(rds_indentifier, "rds_instances"):
+        if helpers.check_in_whitelist(rds_indentifier, "rds_instances"):
             continue
         deletion_response = rds_client.delete_db_instance(
             DBInstanceIdentifier=rds_indentifier,

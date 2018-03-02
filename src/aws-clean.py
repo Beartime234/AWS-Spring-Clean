@@ -20,6 +20,7 @@ from docopt import docopt
 from schema import Schema, SchemaError
 
 # Module Imports
+import helpers
 import settings
 
 # Cleaner Imports
@@ -31,16 +32,16 @@ from cleaners.clean_rds_instances import clean_rds_instances
 
 def main():
     print("Cleaning Global.")
-    settings.set_session()  # Set a blank session for global resources
+    helpers.set_session()  # Set a blank session for global resources
     clean_results = {"global": clean_account_globally()}
     print("Finished Cleaning Global.")
     regions = settings.REGIONS  # Get regions from config
     for region in regions:
         print("Cleaning In {0}.".format(region))
-        settings.set_session(region)  # Set current region
+        helpers.set_session(region)  # Set current region
         clean_results[region] = clean_account_regionally()  # Clean current regions resources
         print("Finished Cleaning In {0}.".format(region))
-    settings.save_results(clean_results)
+    helpers.save_results(clean_results)
 
 
 def clean_account_regionally():
@@ -80,7 +81,7 @@ def validate_arguments():
     schema = Schema({
     }, ignore_extra_keys=True)
     try:
-        schema.validate(settings.ARGUMENTS)
+        schema.validate(helpers.ARGUMENTS)
     except SchemaError as e:
         print(e)
         exit(1)
@@ -88,6 +89,6 @@ def validate_arguments():
 
 
 if __name__ == '__main__':
-    settings.ARGUMENTS = docopt(__doc__, version='AWS Clean Unreleased')
+    helpers.ARGUMENTS = docopt(__doc__, version='AWS Clean Unreleased')
     validate_arguments()
     main()

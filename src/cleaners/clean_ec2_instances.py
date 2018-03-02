@@ -1,5 +1,6 @@
 import boto3
-import settings
+
+import helpers
 
 
 def clean_ec2_instances() -> list:
@@ -46,7 +47,7 @@ def delete_instances(instances) -> list:
     terminated_instances = []
     for instance in instances:
         instance_id = instance["InstanceId"]
-        if settings.check_in_whitelist(instance_id, "ec2_instances"):
+        if helpers.check_in_whitelist(instance_id, "ec2_instances"):
             continue
         ec2 = boto3.resource('ec2')
         instance = ec2.Instance(instance_id)

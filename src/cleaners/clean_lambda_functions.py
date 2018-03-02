@@ -1,5 +1,6 @@
 import boto3
-import settings
+
+import helpers
 
 
 def clean_lambda_functions() -> list:
@@ -46,7 +47,7 @@ def delete_functions(lambda_client, function_list) -> list:
     terminated_functions = []
     for lambda_function in function_list:
         function_name = lambda_function["FunctionName"]
-        if settings.check_in_whitelist(function_name, "lambda_functions"):
+        if helpers.check_in_whitelist(function_name, "lambda_functions"):
             continue
         lambda_client.delete_function(
             FunctionName=function_name
