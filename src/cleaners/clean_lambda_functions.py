@@ -1,5 +1,5 @@
 import boto3
-import botocore
+import settings
 
 
 def clean_lambda_functions() -> list:
@@ -8,11 +8,11 @@ def clean_lambda_functions() -> list:
     Returns:
         A list of all terminated functions
     """
-    print("Cleaning Lambda Functions")
+    print("\tCleaning Lambda Functions")
     lambda_client = boto3.client("lambda")
     functions = get_functions(lambda_client)
     terminated_functions = delete_functions(lambda_client, functions)
-    print("Terminated {0} Lambda Function/s".format(len(terminated_functions)))
+    print("\tTerminated {0} Lambda Function/s".format(len(terminated_functions)))
     return terminated_functions
 
 
@@ -45,8 +45,11 @@ def delete_functions(lambda_client, function_list) -> list:
     """
     terminated_functions = []
     for lambda_function in function_list:
+        function_name = lambda_function["FunctionName"]
+        if settings.check_in_whitelist(function_name, "lambda_functions"):
+            continue
         lambda_client.delete_function(
-            FunctionName=lambda_function["FunctionName"]
+            FunctionName=function_name
         )
         terminated_functions.append(lambda_function["FunctionName"])
     return terminated_functions

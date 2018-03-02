@@ -8,11 +8,11 @@ def clean_ec2_instances() -> list:
     Returns:
         A list of all terminated instances
     """
-    print("Cleaning EC2 Instances")
+    print("\tCleaning EC2 Instances")
     ec2_client = boto3.client("ec2")
     instances = get_instances(ec2_client)
     terminated_instances = delete_instances(instances)
-    print("Terminated {0} EC2 Instance/s".format(len(terminated_instances)))
+    print("\tTerminated {0} EC2 Instance/s".format(len(terminated_instances)))
     return terminated_instances
 
 

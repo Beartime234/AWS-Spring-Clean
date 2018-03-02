@@ -15,14 +15,14 @@ Options:
 
 """
 
-#Package Imports
+# Package Imports
 from docopt import docopt
-from schema import Schema, Use, SchemaError
+from schema import Schema, SchemaError
 
-#Module Imports
+# Module Imports
 import settings
 
-#Cleaner Imports
+# Cleaner Imports
 from cleaners.clean_ec2_instances import clean_ec2_instances
 from cleaners.clean_lambda_functions import clean_lambda_functions
 from cleaners.clean_s3_buckets import clean_buckets
@@ -34,12 +34,12 @@ def main():
     settings.set_session()  # Set a blank session for global resources
     clean_results = {"global": clean_account_globally()}
     print("Finished Cleaning Global Resources.")
-    regions = settings.REGIONS # Get regions from config
+    regions = settings.REGIONS  # Get regions from config
     for region in regions:
-        print("Cleaning in {0} region.".format(region))
+        print("Cleaning In {0} Region.".format(region))
         settings.set_session(region)  # Set current region
         clean_results[region] = clean_account_regionally()  # Clean current regions resources
-        print("Finished cleaning in {0} region.".format(region))
+        print("Finished Cleaning {0} Resources.".format(region))
     settings.save_results(clean_results)
 
 

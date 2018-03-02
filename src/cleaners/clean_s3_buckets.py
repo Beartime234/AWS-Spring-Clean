@@ -1,6 +1,6 @@
 import boto3
 import botocore
-
+import settings
 
 def clean_buckets() -> list:
     """Main ordering for cleaning s3 buckets.
@@ -8,10 +8,10 @@ def clean_buckets() -> list:
     Returns:
         A list of all terminated buckets
     """
-    print("Cleaning Buckets")
+    print("\tCleaning Buckets")
     buckets = get_buckets()
     terminated_buckets = delete_buckets(buckets)
-    print("Terminated {0} Buckets".format(len(terminated_buckets)))
+    print("\tTerminated {0} Bucket/s".format(len(terminated_buckets)))
     return terminated_buckets
 
 
@@ -39,6 +39,8 @@ def delete_buckets(buckets) -> list:
     terminated_buckets = []
     for bucket in buckets:
         bucket_name = bucket["Name"]
+        if settings.check_in_whitelist(bucket_name, "s3_buckets"):
+            continue
         s3 = boto3.resource('s3')
         bucket = s3.Bucket(bucket_name)
         bucket.objects.all().delete() # Delete the content of the bucket

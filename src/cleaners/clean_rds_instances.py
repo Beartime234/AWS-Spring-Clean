@@ -1,5 +1,5 @@
 import boto3
-import botocore
+import settings
 
 
 def clean_rds_instances() -> list:
@@ -8,11 +8,11 @@ def clean_rds_instances() -> list:
     Returns:
         A list of all terminated rds_instances
     """
-    print("Cleaning RDS Instances")
+    print("\tCleaning RDS Instances")
     rds_client = boto3.client("rds")
     rds_instances = get_rds(rds_client)
     terminated_rds_instances = delete_rds(rds_client, rds_instances)
-    print("Terminated {0} RDS Instances/s".format(len(terminated_rds_instances)))
+    print("\tTerminated {0} RDS Instances/s".format(len(terminated_rds_instances)))
     return terminated_rds_instances
 
 
@@ -45,8 +45,11 @@ def delete_rds(rds_client, rds_instances) -> list:
     """
     terminated_instances = []
     for instance in rds_instances:
+        rds_indentifier = instance["DBInstanceIdentifier"]
+        if settings.check_in_whitelist(rds_indentifier, "rds_instances"):
+            continue
         deletion_response = rds_client.delete_db_instance(
-            DBInstanceIdentifier=instance["DBInstanceIdentifier"],
+            DBInstanceIdentifier=rds_indentifier,
             SkipFinalSnapshot=True
         )
         terminated_instances.append(instance["DBInstanceIdentifier"])

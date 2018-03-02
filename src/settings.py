@@ -11,12 +11,19 @@ import os
 # Changeable Settings
 WHITELIST = {
     "global": {
-        "s3_buckets": []
+        "s3_buckets": [
+
+        ]
     },
     "us-east-1": {
         "ec2_instances": [],
         "rds_instances": [],
-        "lambda_functions": [],
+        "lambda_functions": []
+    },
+    "us-east-2": {
+        "ec2_instances": [],
+        "rds_instances": [],
+        "lambda_functions": []
     }
 }
 REGIONS = [
@@ -100,5 +107,7 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
         bool True if in whitelist false if not
 
     """
-    region = boto3._get_default_session().region_name
+    region = boto3._get_default_session().region_name  # Ugly hack to get current session
+    if region is None:
+        region = "global"
     return True if resource_id in WHITELIST[region][resource_type] else False
