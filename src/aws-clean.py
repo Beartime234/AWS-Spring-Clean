@@ -31,11 +31,14 @@ from cleaners.clean_rds_instances import clean_rds_instances
 
 
 def main():
-    print("Cleaning Global.")
-    helpers.set_session()  # Set a blank session for global resources
-    clean_results = {"global": clean_account_globally()}
-    print("Finished Cleaning Global.")
     regions = settings.REGIONS  # Get regions from config
+    clean_results = {}
+    if regions[0] == "global": # If they want you to clean global resources
+        print("Cleaning Global.")
+        helpers.set_session()  # Set a blank session for global resources
+        clean_results["global"] = clean_account_globally()
+        print("Finished Cleaning Global.")
+        regions.pop(0)
     for region in regions:
         print("Cleaning In {0}.".format(region))
         helpers.set_session(region)  # Set current region

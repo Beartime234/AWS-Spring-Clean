@@ -9,13 +9,14 @@ import boto3
 import botocore
 
 # Module Imports
-from settings import RESULTS_DIR, RESULTS_FILENAME, WHITELIST
+from settings import RESULTS_DIR, RESULTS_FILENAME, WHITELIST, PROMPT
 
 
 # Project Global Variables
 ACCOUNT_SESSION = None
 ARGUMENTS = {}
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+KEEP_GOING = "k"
 
 
 def save_results(results):
@@ -44,7 +45,9 @@ def set_session(region=None):
         None
 
     """
-    global ACCOUNT_SESSION
+    global ACCOUNT_SESSION, KEEP_GOING
+    # Reset the KEEP_GOING variable for incorrect whitelist for this region
+    KEEP_GOING = "k"
     try:
         if region is None:
             boto3.setup_default_session(profile_name=ARGUMENTS["PROFILE_NAME"])
@@ -91,4 +94,15 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
     region = boto3._get_default_session().region_name  # Ugly hack to get current session
     if region is None:
         region = "global"
-    return True if resource_id in WHITELIST[region][resource_type] else False
+    try:
+        # If in whitelist for region
+        return True if resource_id in WHITELIST[region][resource_type] else False
+    except KeyError: # If it cant find resource types in the region check
+        global KEEP_GOING
+        while KEEP_GOING != "y" and KEEP_GOING != "n":
+            KEEP_GOING = input("Incorrect whitelist in {0}-{1}."
+                               " Do you still want to continue? y/n"
+                               "\n{2}".format(region, resource_type, PROMPT)).lower()
+        if KEEP_GOING == "y":
+            return False
+        sys.exit(0)
