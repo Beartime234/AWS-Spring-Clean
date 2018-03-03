@@ -28,12 +28,13 @@ from cleaners.clean_ec2_instances import clean_ec2_instances
 from cleaners.clean_lambda_functions import clean_lambda_functions
 from cleaners.clean_s3_buckets import clean_buckets
 from cleaners.clean_rds_instances import clean_rds_instances
+from cleaners.clean_dynamo_tables import clean_dynamo_tables
 
 
 def main():
     regions = settings.REGIONS  # Get regions from config
     clean_results = {}
-    if regions[0] == "global": # If they want you to clean global resources
+    if regions[0] == "global":  # If they want you to clean global resources
         print("Cleaning Global.")
         helpers.set_session()  # Set a blank session for global resources
         clean_results["global"] = clean_account_globally()
@@ -56,7 +57,8 @@ def clean_account_regionally():
     results = {
         "ec2_instances": clean_ec2_instances(),
         "rds_instances": clean_rds_instances(),
-        "lambda_functions": clean_lambda_functions()
+        "lambda_functions": clean_lambda_functions(),
+        "dynamo_tables": clean_dynamo_tables()
     }
     return results
 

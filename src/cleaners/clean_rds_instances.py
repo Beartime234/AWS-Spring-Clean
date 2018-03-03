@@ -13,7 +13,7 @@ def clean_rds_instances() -> list:
     Returns:
         A list of all terminated rds_instances
     """
-    print("\tCleaning RDS Instances")
+    print("\tCleaning RDS Instance/s")
     rds_client = boto3.client("rds")
     rds_instances = get_rds(rds_client)
     terminated_rds_instances = delete_rds(rds_client, rds_instances)

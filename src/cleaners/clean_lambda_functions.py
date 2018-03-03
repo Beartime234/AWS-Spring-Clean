@@ -13,7 +13,7 @@ def clean_lambda_functions() -> list:
     Returns:
         A list of all terminated functions
     """
-    print("\tCleaning Lambda Functions")
+    print("\tCleaning Lambda Function/s")
     lambda_client = boto3.client("lambda")
     functions = get_functions(lambda_client)
     terminated_functions = delete_functions(lambda_client, functions)

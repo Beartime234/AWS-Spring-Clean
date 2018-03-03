@@ -13,7 +13,7 @@ def clean_buckets() -> list:
     Returns:
         A list of all terminated buckets
     """
-    print("\tCleaning Buckets")
+    print("\tCleaning Bucket/s")
     buckets = get_buckets()
     terminated_buckets = delete_buckets(buckets)
     print("\tTerminated {0} Bucket/s".format(len(terminated_buckets)))
