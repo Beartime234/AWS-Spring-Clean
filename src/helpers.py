@@ -19,7 +19,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 KEEP_GOING = "k"
 
 
-def save_results(results):
+def save_results(results) -> None:
     """Write the results to a file
 
     Args:
@@ -35,7 +35,7 @@ def save_results(results):
     return
 
 
-def set_session(region=None):
+def set_session(region=None) -> None:
     """Sets the global _account_session variable for boto3 to the profile specified.
 
     Args:
@@ -102,7 +102,7 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
         while KEEP_GOING != "y" and KEEP_GOING != "n":
             KEEP_GOING = input("Incorrect whitelist in {0}-{1}."
                                " Do you still want to continue? y/n"
-                               "\n{2}".format(region, resource_type, PROMPT)).lower()
+                               "->".format(region, resource_type, PROMPT)).lower()
         if KEEP_GOING == "y":
             return False
         sys.exit(0)
