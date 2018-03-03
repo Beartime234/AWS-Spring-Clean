@@ -68,7 +68,7 @@ def clean_account_globally():
         A dictionary of the results of the destruction for region specific resources
     """
     results = {
-        "s3buckets": clean_buckets()
+        "s3_buckets": clean_buckets()
     }
     return results
 

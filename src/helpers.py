@@ -9,7 +9,7 @@ import boto3
 import botocore
 
 # Module Imports
-from settings import RESULTS_DIR, RESULTS_FILENAME, WHITELIST, PROMPT
+from settings import RESULTS_DIR, RESULTS_FILENAME, WHITELIST
 
 
 # Project Global Variables
@@ -101,8 +101,8 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
         global KEEP_GOING
         while KEEP_GOING != "y" and KEEP_GOING != "n":
             KEEP_GOING = input("Incorrect whitelist in {0}-{1}."
-                               " Do you still want to continue? y/n"
-                               "->".format(region, resource_type, PROMPT)).lower()
+                               " Do you still want to continue (y/n)? "
+                               "".format(region, resource_type)).lower()
         if KEEP_GOING == "y":
             return False
         sys.exit(0)

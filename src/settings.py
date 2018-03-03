@@ -27,4 +27,3 @@ REGIONS = [
 ]
 RESULTS_DIR = "results"
 RESULTS_FILENAME = "aws-clean"
-PROMPT = "$ =>"
