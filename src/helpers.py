@@ -108,13 +108,30 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
         sys.exit(0)
 
 
-def starting_clean_print(resource):
+def starting_clean_print(resource) -> None:
+    """The function for printing the start of cleaning a resource
+
+    Args:
+        resource (str): The nice name for the resource
+
+    Returns:
+        None
+    """
     print("\tCleaning {0}s ".format(resource))
     return
 
 
-def finished_clean_print(resource, terminated_resource):
-    terminated_count = len(terminated_resource)
+def finished_clean_print(resource, terminated_resources) -> None:
+    """The function for printing the end of cleaning a resource.
+
+    Args:
+        resource (str): The nice name for the resource
+        terminated_resources (list): A list of the terminated resources.
+
+    Returns:
+        None
+    """
+    terminated_count = len(terminated_resources)
     print_s = "s"
     if terminated_count == 1:
         print_s = ""
