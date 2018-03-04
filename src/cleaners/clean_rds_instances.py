@@ -6,6 +6,11 @@ import boto3
 # Module Imports
 import helpers
 
+# Cleaner Settings
+RESOURCE_NAME = "RDS Instance"
+WHITELIST_NAME = "rds_instances"
+BOTO3_NAME = "rds"
+
 
 def clean_rds_instances() -> list:
     """Main ordering for cleaning rds_instances.
@@ -13,11 +18,11 @@ def clean_rds_instances() -> list:
     Returns:
         A list of all terminated rds_instances
     """
-    print("\tCleaning RDS Instance/s")
-    rds_client = boto3.client("rds")
+    helpers.starting_clean_print(RESOURCE_NAME)
+    rds_client = boto3.client(BOTO3_NAME)
     rds_instances = get_rds(rds_client)
     terminated_rds_instances = delete_rds(rds_client, rds_instances)
-    print("\tTerminated {0} RDS Instances/s".format(len(terminated_rds_instances)))
+    helpers.finished_clean_print(RESOURCE_NAME, terminated_rds_instances)
     return terminated_rds_instances
 
 
@@ -51,11 +56,11 @@ def delete_rds(rds_client, rds_instances) -> list:
     terminated_instances = []
     for instance in rds_instances:
         rds_indentifier = instance["DBInstanceIdentifier"]
-        if helpers.check_in_whitelist(rds_indentifier, "rds_instances"):
+        if helpers.check_in_whitelist(rds_indentifier, WHITELIST_NAME):
             continue
         deletion_response = rds_client.delete_db_instance(
             DBInstanceIdentifier=rds_indentifier,
             SkipFinalSnapshot=True
         )
-        terminated_instances.append(instance["DBInstanceIdentifier"])
+        terminated_instances.append(rds_indentifier)
     return terminated_instances

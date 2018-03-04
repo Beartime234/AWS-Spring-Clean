@@ -6,6 +6,11 @@ import boto3
 # Module Imports
 import helpers
 
+# Cleaner Settings
+RESOURCE_NAME = "Dynamo Table"
+WHITELIST_NAME = "dynamo_tables"
+BOTO3_NAME = "dynamodb"
+
 
 def clean_dynamo_tables() -> list:
     """Main ordering for cleaning dynamo tables.
@@ -13,11 +18,11 @@ def clean_dynamo_tables() -> list:
     Returns:
         A list of all terminated dynamo tables
     """
-    print("\tCleaning Dynamo Table/s")
-    dynamo_client = boto3.client("dynamodb")
+    helpers.starting_clean_print(RESOURCE_NAME)
+    dynamo_client = boto3.client(BOTO3_NAME)
     dynamo_tables = get_dynamo_tables(dynamo_client)
     terminated_dynamo_tables = delete_dynamo(dynamo_client, dynamo_tables)
-    print("\tTerminated {0} Dynamo Table/s".format(len(terminated_dynamo_tables)))
+    helpers.finished_clean_print(RESOURCE_NAME, terminated_dynamo_tables)
     return terminated_dynamo_tables
 
 
@@ -51,7 +56,7 @@ def delete_dynamo(dynamo_client, dynamo_tables) -> list:
     terminated_tables = []
     for table in dynamo_tables:
         table_name = table
-        if helpers.check_in_whitelist(table_name, "dynamo_tables"):
+        if helpers.check_in_whitelist(table_name, WHITELIST_NAME):
             continue
         deletion_response = dynamo_client.delete_table(
             TableName=table_name

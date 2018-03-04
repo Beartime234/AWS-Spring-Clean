@@ -6,6 +6,11 @@ import boto3
 # Module Imports
 import helpers
 
+# Cleaner Settings
+RESOURCE_NAME = "EC2 Instance"
+WHITELIST_NAME = "ec2_instances"
+BOTO3_NAME = "ec2"
+
 
 def clean_ec2_instances() -> list:
     """Main ordering for cleaning instances.
@@ -13,11 +18,11 @@ def clean_ec2_instances() -> list:
     Returns:
         A list of all terminated instances
     """
-    print("\tCleaning EC2 Instance/s")
-    ec2_client = boto3.client("ec2")
+    helpers.starting_clean_print(RESOURCE_NAME)
+    ec2_client = boto3.client(BOTO3_NAME)
     instances = get_instances(ec2_client)
     terminated_instances = delete_instances(instances)
-    print("\tTerminated {0} EC2 Instance/s".format(len(terminated_instances)))
+    helpers.finished_clean_print(RESOURCE_NAME, terminated_instances)
     return terminated_instances
 
 
@@ -51,9 +56,9 @@ def delete_instances(instances) -> list:
     terminated_instances = []
     for instance in instances:
         instance_id = instance["InstanceId"]
-        if helpers.check_in_whitelist(instance_id, "ec2_instances"):
+        if helpers.check_in_whitelist(instance_id, WHITELIST_NAME):
             continue
-        ec2 = boto3.resource('ec2')
+        ec2 = boto3.resource(BOTO3_NAME)
         instance = ec2.Instance(instance_id)
         instance.terminate()  # Terminate the instance
         terminated_instances.append(instance_id)

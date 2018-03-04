@@ -35,10 +35,10 @@ def main():
     regions = settings.REGIONS  # Get regions from config
     clean_results = {}
     if regions[0] == "global":  # If they want you to clean global resources
-        print("Cleaning Global.")
+        print("Cleaning Global Resources.")
         helpers.set_session()  # Set a blank session for global resources
         clean_results["global"] = clean_account_globally()
-        print("Finished Cleaning Global.")
+        print("Finished Cleaning Globally.")
         regions.pop(0)
     for region in regions:
         print("Cleaning In {0}.".format(region))

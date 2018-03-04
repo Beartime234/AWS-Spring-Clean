@@ -6,6 +6,11 @@ import boto3
 # Module Imports
 import helpers
 
+# Cleaner Settings
+RESOURCE_NAME = "Lambda Function"
+WHITELIST_NAME = "lambda_functions"
+BOTO3_NAME = "lambda"
+
 
 def clean_lambda_functions() -> list:
     """Main ordering for cleaning lambda functions.
@@ -13,11 +18,11 @@ def clean_lambda_functions() -> list:
     Returns:
         A list of all terminated functions
     """
-    print("\tCleaning Lambda Function/s")
-    lambda_client = boto3.client("lambda")
+    helpers.starting_clean_print(RESOURCE_NAME)
+    lambda_client = boto3.client(BOTO3_NAME)
     functions = get_functions(lambda_client)
     terminated_functions = delete_functions(lambda_client, functions)
-    print("\tTerminated {0} Lambda Function/s".format(len(terminated_functions)))
+    helpers.finished_clean_print(RESOURCE_NAME, terminated_functions)
     return terminated_functions
 
 
@@ -51,7 +56,7 @@ def delete_functions(lambda_client, function_list) -> list:
     terminated_functions = []
     for lambda_function in function_list:
         function_name = lambda_function["FunctionName"]
-        if helpers.check_in_whitelist(function_name, "lambda_functions"):
+        if helpers.check_in_whitelist(function_name, WHITELIST_NAME):
             continue
         lambda_client.delete_function(
             FunctionName=function_name

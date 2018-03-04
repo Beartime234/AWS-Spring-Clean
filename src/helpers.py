@@ -106,3 +106,17 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
         if KEEP_GOING == "y":
             return False
         sys.exit(0)
+
+
+def starting_clean_print(resource):
+    print("\tCleaning {0}s ".format(resource))
+    return
+
+
+def finished_clean_print(resource, terminated_resource):
+    terminated_count = len(terminated_resource)
+    print_s = "s"
+    if terminated_count == 1:
+        print_s = ""
+    print("\tTerminated {0} {1}{2}".format(terminated_count, resource, print_s))
+    return
