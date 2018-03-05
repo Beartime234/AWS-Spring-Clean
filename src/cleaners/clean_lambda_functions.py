@@ -2,6 +2,7 @@
 
 # Package Imports
 import boto3
+from botocore.exceptions import ClientError
 
 # Module Imports
 import helpers
@@ -10,6 +11,7 @@ import helpers
 RESOURCE_NAME = "Lambda Function"
 WHITELIST_NAME = "lambda_functions"
 BOTO3_NAME = "lambda"
+BOTO3_LIST_FUNCTION = "list_functions"
 
 
 def clean_lambda_functions() -> list:
@@ -36,7 +38,7 @@ def get_functions(lambda_client) -> list:
         A list of all lambda functions in the account.
     """
     function_list = []
-    paginator = lambda_client.get_paginator("list_functions")
+    paginator = lambda_client.get_paginator(BOTO3_LIST_FUNCTION)
     pages = paginator.paginate()
     for page in pages:
         function_list = function_list + page["Functions"]
@@ -58,8 +60,15 @@ def delete_functions(lambda_client, function_list) -> list:
         function_name = lambda_function["FunctionName"]
         if helpers.check_in_whitelist(function_name, WHITELIST_NAME):
             continue
-        lambda_client.delete_function(
-            FunctionName=function_name
-        )
+        try:
+            lambda_client.delete_function(
+                FunctionName=function_name
+            )
+        except ClientError as error:
+            error_string = "{0} on {1} - {2}".format(error, RESOURCE_NAME,
+                                                     function_name)
+            print(error_string)
+            terminated_functions.append(error_string)
+            continue
         terminated_functions.append(lambda_function["FunctionName"])
     return terminated_functions

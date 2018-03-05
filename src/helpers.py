@@ -80,7 +80,7 @@ def get_results_filename() -> str:
     return "{0}/{1}.json".format(get_results_dir(), RESULTS_FILENAME)
 
 
-def check_in_whitelist(resource_id, resource_type) -> bool:
+def check_in_whitelist(resource_id, resource_type, is_global=False) -> bool:
     """Checks if the resource id is in the corresponding resources whitelist for the region
 
     Args:
@@ -91,9 +91,10 @@ def check_in_whitelist(resource_id, resource_type) -> bool:
         bool True if in whitelist false if not
 
     """
-    region = boto3._get_default_session().region_name  # Ugly hack to get current session
-    if region is None:
+    if is_global is True:
         region = "global"
+    else:
+        region = boto3._get_default_session().region_name  # Ugly hack to get current session
     try:
         # If in whitelist for region
         return True if resource_id in WHITELIST[region][resource_type] else False

@@ -20,6 +20,9 @@ WHITELIST = {
         ],
         "dynamo_tables": [
 
+        ],
+        "redshift_clusters": [
+
         ]
     },
     "us-east-2": {
@@ -33,6 +36,9 @@ WHITELIST = {
 
         ],
         "dynamo_tables": [
+
+        ],
+        "redshift_clusters": [
 
         ]
     }

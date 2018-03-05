@@ -2,6 +2,7 @@
 
 # Package Imports
 import boto3
+from botocore.exceptions import ClientError
 
 # Module Imports
 import helpers
@@ -10,7 +11,7 @@ import helpers
 RESOURCE_NAME = "S3 Bucket"
 WHITELIST_NAME = "s3_buckets"
 BOTO3_NAME = "s3"
-
+BOTO3_LIST_FUNCTION = "" # Not used here as we use the resource method currently
 
 def clean_buckets() -> list:
     """Main ordering for cleaning s3 buckets.
@@ -36,7 +37,7 @@ def get_buckets(s3_client) -> list:
         A list of buckets
     """
     response = s3_client.list_buckets()
-    buckets = response["Buckets"]
+    buckets = response["Buckets"]  # TODO change this to the template type with pagnation
     return buckets
 
 
@@ -52,12 +53,18 @@ def delete_buckets(buckets) -> list:
     terminated_buckets = []
     for bucket in buckets:
         bucket_name = bucket["Name"]
-        if helpers.check_in_whitelist(bucket_name, WHITELIST_NAME):
+        if helpers.check_in_whitelist(bucket_name, WHITELIST_NAME, is_global=True):
             continue
         s3 = boto3.resource(BOTO3_NAME)
         bucket = s3.Bucket(bucket_name)
-        bucket.objects.all().delete() # Delete the content of the bucket
-        bucket.delete()  # Delete the bucket itself
+        try:
+            bucket.objects.all().delete() # Delete the content of the bucket
+            bucket.delete()  # Delete the bucket itself
+        except ClientError as error:
+            error_string = "{0} on {1} - {2}".format(error, RESOURCE_NAME,
+                                                     bucket_name)
+            print(error_string)
+            terminated_buckets.append(error_string)
         terminated_buckets.append(bucket_name)
     return terminated_buckets
 

@@ -2,9 +2,9 @@
 """AWS Clean
 
 Usage:
-  clean_account.py clean (--profile PROFILE_NAME) [--configuration FILE] [-s --save]
-  clean_account.py (-h | --help)
-  clean_account.py (-v | --version)
+  springclean.py (--profile PROFILE_NAME) [--configuration FILE] [-s --save]
+  springclean.py (-h | --help)
+  springclean.py (-v | --version)
 
 Options:
   --profile             Profile name used with appropriate permissions into this AWS.
@@ -18,6 +18,7 @@ Options:
 # Package Imports
 from docopt import docopt
 from schema import Schema, SchemaError
+import boto3
 
 # Module Imports
 import helpers
@@ -29,6 +30,7 @@ from cleaners.clean_lambda_functions import clean_lambda_functions
 from cleaners.clean_s3_buckets import clean_buckets
 from cleaners.clean_rds_instances import clean_rds_instances
 from cleaners.clean_dynamo_tables import clean_dynamo_tables
+from cleaners.clean_redshift_clusters import clean_redshift_clusters
 
 
 def main():
@@ -58,7 +60,8 @@ def clean_account_regionally():
         "ec2_instances": clean_ec2_instances(),
         "rds_instances": clean_rds_instances(),
         "lambda_functions": clean_lambda_functions(),
-        "dynamo_tables": clean_dynamo_tables()
+        "dynamo_tables": clean_dynamo_tables(),
+        "redshift_clusters": clean_redshift_clusters()
     }
     return results
 

@@ -5,11 +5,13 @@ import boto3
 
 # Module Imports
 import helpers
+from botocore.exceptions import ClientError
 
 # Cleaner Settings
 RESOURCE_NAME = "RDS Instance"
 WHITELIST_NAME = "rds_instances"
 BOTO3_NAME = "rds"
+BOTO3_LIST_FUNCTION = "describe_db_instances"
 
 
 def clean_rds_instances() -> list:
@@ -36,7 +38,7 @@ def get_rds(rds_client) -> list:
         A list of all InstanceIds in the account.
     """
     rds_instance_list = []
-    paginator = rds_client.get_paginator("describe_db_instances")
+    paginator = rds_client.get_paginator(BOTO3_LIST_FUNCTION)
     pages = paginator.paginate()
     for page in pages:
         rds_instance_list = rds_instance_list + page["DBInstances"]
@@ -58,9 +60,15 @@ def delete_rds(rds_client, rds_instances) -> list:
         rds_indentifier = instance["DBInstanceIdentifier"]
         if helpers.check_in_whitelist(rds_indentifier, WHITELIST_NAME):
             continue
-        deletion_response = rds_client.delete_db_instance(
-            DBInstanceIdentifier=rds_indentifier,
-            SkipFinalSnapshot=True
-        )
+        try:
+            deletion_response = rds_client.delete_db_instance(
+                DBInstanceIdentifier=rds_indentifier,
+                SkipFinalSnapshot=True
+            )
+        except ClientError as error:
+            error_string = "{0} on {1} - {2}".format(error, RESOURCE_NAME, rds_indentifier)
+            print(error_string)
+            terminated_instances.append(error_string)
+            continue
         terminated_instances.append(rds_indentifier)
     return terminated_instances

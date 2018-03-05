@@ -5,11 +5,13 @@ import boto3
 
 # Module Imports
 import helpers
+from botocore.exceptions import ClientError
 
 # Cleaner Settings
 RESOURCE_NAME = "Dynamo Table"
 WHITELIST_NAME = "dynamo_tables"
 BOTO3_NAME = "dynamodb"
+BOTO3_LIST_FUNCTION = "list_tables"
 
 
 def clean_dynamo_tables() -> list:
@@ -36,7 +38,7 @@ def get_dynamo_tables(dynamo_client) -> list:
         A list of all dynamo tables in the account.
     """
     dynamo_tables_list = []
-    paginator = dynamo_client.get_paginator("list_tables")
+    paginator = dynamo_client.get_paginator(BOTO3_LIST_FUNCTION)
     pages = paginator.paginate()
     for page in pages:
         dynamo_tables_list = dynamo_tables_list + page["TableNames"]
@@ -58,8 +60,14 @@ def delete_dynamo(dynamo_client, dynamo_tables) -> list:
         table_name = table
         if helpers.check_in_whitelist(table_name, WHITELIST_NAME):
             continue
-        deletion_response = dynamo_client.delete_table(
-            TableName=table_name
-        )
+        try:
+            deletion_response = dynamo_client.delete_table(
+                TableName=table_name
+            )
+        except ClientError as error:
+            error_string = "{0} on {1} - {2}".format(error, RESOURCE_NAME, table_name)
+            print(error_string)
+            terminated_tables.append(error_string)
+            continue
         terminated_tables.append(table_name)
     return terminated_tables
