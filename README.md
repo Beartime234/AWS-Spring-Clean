@@ -8,10 +8,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+You will need a version of Python 3.5+. You can download python 3.5+ [here](https://www.python.org/downloads/).
+You can check your python version using this.
+```
+python --version
+```  
+
+Remember to make sure that you don't already have python3 installed by using this.
 
 ```
-Give examples
+python3 --version
 ```
 
 ### Installing
@@ -52,19 +58,15 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Python](https://www.python.org/) - The language used
+* [Boto3](https://github.com/boto/boto3) - AWS Python SDK
+* [docopt](https://github.com/docopt/docopt) - Used to create great command-line style functionality
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/Beartime234/AWS-Spring-Clean/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
@@ -78,7 +80,7 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the APACHE License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
