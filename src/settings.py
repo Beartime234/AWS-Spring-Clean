@@ -11,6 +11,7 @@
 # rds_instances - DbIndentifier
 # dynamo_tables - TableName
 # redshift_clusters - ClusterIdentifier
+# ecs_clusters - Cluster ARN
 WHITELIST = {
     "global": {
         "s3_buckets": [
@@ -32,6 +33,9 @@ WHITELIST = {
         ],
         "redshift_clusters": [
 
+        ],
+        "ecs_clusters": [
+
         ]
     },
     "us-east-2": {
@@ -48,6 +52,9 @@ WHITELIST = {
 
         ],
         "redshift_clusters": [
+
+        ],
+        "ecs_clusters": [
 
         ]
     }

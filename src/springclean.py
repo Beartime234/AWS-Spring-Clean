@@ -30,6 +30,7 @@ from cleaners.clean_s3_buckets import clean_buckets
 from cleaners.clean_rds_instances import clean_rds_instances
 from cleaners.clean_dynamo_tables import clean_dynamo_tables
 from cleaners.clean_redshift_clusters import clean_redshift_clusters
+from cleaners.clean_ecs_clusters import clean_ecs_clusters
 
 
 def main():
@@ -60,7 +61,8 @@ def clean_account_regionally():
         "rds_instances": clean_rds_instances(),
         "lambda_functions": clean_lambda_functions(),
         "dynamo_tables": clean_dynamo_tables(),
-        "redshift_clusters": clean_redshift_clusters()
+        "redshift_clusters": clean_redshift_clusters(),
+        "ecs_clusters": clean_ecs_clusters()
     }
     return results
 

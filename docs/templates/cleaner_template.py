@@ -12,7 +12,7 @@ import helpers
 from botocore.exceptions import ClientError
 
 # Cleaner Settings
-RESOURCE_NAME = ""
+RESOURCE_NAME = ""  # Not plural
 WHITELIST_NAME = ""
 BOTO3_NAME = ""
 BOTO3_LIST_FUNCTION = ""
@@ -46,6 +46,7 @@ def get_resources(resource_client) -> list:
     pages = paginator.paginate()
     for page in pages:
         # Your going to have to look through the response and append the correct value to the list
+        resource = page["something"]
         resource_list = resource_list + resource
     return resource_list
 
@@ -54,6 +55,7 @@ def delete_resources(resource_client, resource_list) -> list:
     """Deletes all resources from a list
 
     Args:
+        resource_client (boto3.Client): A boto3 client for the resource
         resource_list (list): A list of resources
 
     Returns:

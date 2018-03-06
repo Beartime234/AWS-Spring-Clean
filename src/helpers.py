@@ -84,6 +84,7 @@ def check_in_whitelist(resource_id, resource_type, is_global=False) -> bool:
     """Checks if the resource id is in the corresponding resources whitelist for the region
 
     Args:
+        is_global: If this resource is in the global region
         resource_id (str): The resource id which will reside in the whitelist
         resource_type (str): The resource type e.g. s3_bucket or ec2_instance which will be in the whitelist
 
