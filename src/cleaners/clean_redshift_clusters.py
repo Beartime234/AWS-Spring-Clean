@@ -14,10 +14,10 @@ BOTO3_NAME = "redshift"
 BOTO3_LIST_FUNCTION = "describe_clusters"
 
 def clean_redshift_clusters() -> list:
-    """Main ordering for cleaning resources.
+    """Main ordering for cleaning redshift clusters.
 
     Returns:
-        A list of all terminated resources
+        A list of all terminated redshift resources
     """
     helpers.starting_clean_print(RESOURCE_NAME)
     redshift_cluster = boto3.client(BOTO3_NAME)
@@ -28,13 +28,13 @@ def clean_redshift_clusters() -> list:
 
 
 def get_redshift_clusters(redshift_client) -> list:
-    """Get all resources in an account
+    """Get all redshift clusters in an account
 
     Args:
-        redshift_client (boto3.client): A resource client
+        redshift_client (boto3.client): A redshift boto3 client
 
     Returns:
-        A list of resources
+        A list of redshift clusters
     """
     resource_list = []
     paginator = redshift_client.get_paginator(BOTO3_LIST_FUNCTION)
@@ -45,14 +45,14 @@ def get_redshift_clusters(redshift_client) -> list:
 
 
 def delete_redshift_clusters(redshift_client, cluster_list) -> list:
-    """Deletes all resources from a list
+    """Deletes all redshift clusters from a list
 
     Args:
         redshift_client: A redshift cluster
         cluster_list (list): A list of resources
 
     Returns:
-        A list of terminated resources
+        A list of terminated redshift clusters
     """
     terminated_clusters = []
     for cluster in cluster_list:

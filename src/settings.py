@@ -1,11 +1,12 @@
 # settings.py
-
+#
 # aws-clean will not destroy things in the whitelist for global resources
 # please put under the global region. I recommend just adding to the lists provided
-
-
-# What value do i put in for each resource
-
+# unless you are trying to provide a new cleaner.
+#
+#
+# What value do I put in for each resource>
+#
 # s3_buckets - BucketName
 # ec2_instances - Instance-id
 # rds_instances - DbIndentifier
@@ -36,6 +37,9 @@ WHITELIST = {
         ],
         "ecs_clusters": [
 
+        ],
+        "efs": [
+
         ]
     },
     "us-east-2": {
@@ -55,6 +59,9 @@ WHITELIST = {
 
         ],
         "ecs_clusters": [
+
+        ],
+        "efs": [
 
         ]
     }

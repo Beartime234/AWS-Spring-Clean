@@ -71,8 +71,11 @@ def delete_resources(resource_client, resource_list) -> list:
                 FunctionName=resource_actual_name
             )
         except ClientError as error:
-             terminated_resources.append("{0} on {1} - {2}"
-                                         "".format(error, RESOURCE_NAME, resource_actual_name))
+            error_string = "{0} on {1} - {2}".format(error, RESOURCE_NAME,
+                                                     resource_actual_name)
+            print(error_string)
+            terminated_resources.append(error_string)
+            continue
         terminated_resources.append(resource_actual_name)
     return terminated_resources
 
