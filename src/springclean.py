@@ -18,7 +18,6 @@ Options:
 # Package Imports
 from docopt import docopt
 from schema import Schema, SchemaError
-import boto3
 
 # Module Imports
 import helpers

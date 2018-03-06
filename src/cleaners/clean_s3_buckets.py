@@ -37,7 +37,7 @@ def get_buckets(s3_client) -> list:
         A list of buckets
     """
     response = s3_client.list_buckets()
-    buckets = response["Buckets"]  # TODO change this to the template type with pagnation
+    buckets = response["Buckets"]  # There is no pagination
     return buckets
 
 
@@ -57,6 +57,7 @@ def delete_buckets(buckets) -> list:
             continue
         s3 = boto3.resource(BOTO3_NAME)
         bucket = s3.Bucket(bucket_name)
+        # There is a much easier to do this then with pagination. Not sure if it works.
         try:
             bucket.objects.all().delete() # Delete the content of the bucket
             bucket.delete()  # Delete the bucket itself

@@ -2,6 +2,15 @@
 
 # aws-clean will not destroy things in the whitelist for global resources
 # please put under the global region. I recommend just adding to the lists provided
+
+
+# What value do i put in for each resource
+
+# s3_buckets - BucketName
+# ec2_instances - Instance-id
+# rds_instances - DbIndentifier
+# dynamo_tables - TableName
+# redshift_clusters - ClusterIdentifier
 WHITELIST = {
     "global": {
         "s3_buckets": [
