@@ -105,3 +105,4 @@ ENV/
 
 #results
 src/results/*
+tests/.pytest_cache/
